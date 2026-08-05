@@ -1,0 +1,38 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# 1. Khai báo file YAML gốc
+resources:
+  - eni-config.yaml
+
+# 2. Đọc file .env để nạp biến vào bộ nhớ tạm của Kustomize
+configMapGenerator:
+  - name: eni-env-source
+    envs:
+      - .env
+
+# 3. Định nghĩa luật để thay thế biến vào đúng vị trí trong file YAML
+replacements:
+  # Thay thế Subnet ID
+  - source:
+      kind: ConfigMap
+      name: eni-env-source
+      fieldPath: data.SUBNET_ID
+    targets:
+      - select:
+          kind: ENIConfig
+          name: ap-southeast-1a
+        fieldPaths:
+          - spec.subnet
+
+  # Thay thế Security Group ID
+  - source:
+      kind: ConfigMap
+      name: eni-env-source
+      fieldPath: data.SECURITY_GROUP_ID
+    targets:
+      - select:
+          kind: ENIConfig
+          name: ap-southeast-1a
+        fieldPaths:
+          - spec.securityGroups.0 # Số 0 nghĩa là phần tử đầu tiên trong mảng

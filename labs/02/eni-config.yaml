@@ -1,0 +1,8 @@
+apiVersion: crd.k8s.amazonaws.com/v1alpha1
+kind: ENIConfig
+metadata:
+  name: ap-southeast-1a # Tên của ENIConfig phải trùng với tên của AZ
+spec:
+  subnet: PLACEHOLDER_SUBNET # ID của Secondary Subnet riêng cho Pod
+  securityGroups:
+    - PLACEHOLDER_SG # SG dành riêng cho Pod
