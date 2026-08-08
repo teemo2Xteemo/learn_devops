@@ -1,6 +1,6 @@
-# 🐳 Bài Lab 02: Pod Architecture – Resource Limits & Health Check Probes (Liveness, Readiness, Startup)
+# 🐳 Bài Lab 04: Pod Architecture – Resource Limits & Health Check Probes (Liveness, Readiness, Startup)
 
-Lộ trình: DevOps Engineer chuyên sâu Kubernetes & Cloud Infrastructure  
+Lộ trình: DevOps Engineer chuyên sâu Kubernetes & Cloud Infrastructure
 Mức độ: Cơ bản - Trung cấp (Intermediate)  
 Thời gian thực hành: 15 – 30 phút
 
@@ -31,6 +31,7 @@ Bài lab này hướng dẫn bạn cách thiết lập và quản lý tài nguy�
 ### Bước 1: Khởi tạo thư mục và Namespace làm việc
 
 Tạo thư mục dự án `devops-lab02` và namespace riêng trên cụm Kubernetes:
+
 ```bash
 mkdir -p devops-lab02 && cd devops-lab02
 
@@ -38,9 +39,11 @@ kubectl create namespace devops-lab02
 
 kubectl config set-context --current --namespace=devops-lab02
 ```
+
 ### Bước 2: Viết Manifest YAML cho Pod có Resource Limits & Probes
 
 Tạo file `pod-health-demo.yaml`:
+
 ```yaml
 apiVersion: v1
 kind: Pod
@@ -79,10 +82,13 @@ containers:
   periodSeconds: 10
   failureThreshold: 3
 ```
+
 Triển khai Pod lên cluster:
+
 ```bash
 kubectl apply -f pod-health-demo.yaml
 ```
+
 ---
 
 ## 🚀 4. Chạy như thế nào?
@@ -90,18 +96,24 @@ kubectl apply -f pod-health-demo.yaml
 Sau khi triển khai, bạn thực hiện các lệnh kiểm tra và giả lập sự cố sau:
 
 1. **Kiểm tra trạng thái khởi động bình thường:**
+
 ```bash
 kubectl get pod web-app-demo -o wide -w
-kubectl describe pod web-app-demo  
+kubectl describe pod web-app-demo
 ```
+
 2. **Giả lập sự cố Probe Failure:** Xóa tệp `index.html` trong container Nginx để cố tình làm hỏng HTTP GET `/`:
+
 ```bash
-kubectl exec web-app-demo -- rm /usr/share/nginx/html/index.html  
+kubectl exec web-app-demo -- rm /usr/share/nginx/html/index.html
 ```
+
 3. **Theo dõi phản ứng tự chữa lành (Self-Healing) của Kubernetes:**
+
 ```bash
 kubectl get pod web-app-demo -w
 ```
+
 ---
 
 ## ✅ 5. Kết quả mong đợi là gì?
