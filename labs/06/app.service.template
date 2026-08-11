@@ -1,0 +1,25 @@
+[Unit]
+Description=Dummy App Production Daemon Service
+After=network.target
+Documentation=https://docs.systemd.io/
+
+[Service]
+Type=simple
+WorkingDirectory={{REPOS_DIR}}
+ExecStart={{REPOS_DIR}}/app.sh
+Restart=on-failure
+RestartSec=5s
+User={{USER}}
+Group={{GROUP}}
+
+# Security Hardening
+ProtectSystem=full
+ProtectHome=false
+NoNewPrivileges=true
+
+# Log output
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
