@@ -4,14 +4,16 @@ services:
   # Backend 1: API Service
   api_service:
     image: python:3.10-slim
-    command: python -m http.server 8080
+    command: >
+      sh -c "echo '<!DOCTYPE html><html><body>đây là api</body></html>' > /index.html && python -m http.server 8080 --directory /"
     networks:
       - app_net
 
   # Backend 2: Web Service
   web_service:
     image: python:3.10-slim
-    command: python -m http.server 8080
+    command: >
+      sh -c "echo '<!DOCTYPE html><html><body>web_service</body></html>' > /index.html && python -m http.server 8080 --directory /"
     networks:
       - app_net
 
