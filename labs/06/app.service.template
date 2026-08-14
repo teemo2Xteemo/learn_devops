@@ -2,6 +2,10 @@
 Description=Dummy App Production Daemon Service
 After=network.target
 Documentation=https://docs.systemd.io/
+# Giới hạn số lần khởi động lại trong khoảng thời gian nhất định
+# để tránh restart lặp vô hạn nếu service crash liên tục
+StartLimitIntervalSec=60s
+StartLimitBurst=3
 
 [Service]
 Type=simple
