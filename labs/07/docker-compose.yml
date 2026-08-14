@@ -5,7 +5,7 @@ services:
   api_service:
     image: python:3.10-slim
     command: >
-      sh -c "echo '<!DOCTYPE html><html><body>đây là api</body></html>' > /index.html && python -m http.server 8080 --directory /"
+      sh -c "mkdir -p /app/www && echo '<!DOCTYPE html><html><body>đây là api_service</body></html>' > /app/www/index.html && python -m http.server 8080 --directory /app/www"
     networks:
       - app_net
 
@@ -13,7 +13,7 @@ services:
   web_service:
     image: python:3.10-slim
     command: >
-      sh -c "echo '<!DOCTYPE html><html><body>web_service</body></html>' > /index.html && python -m http.server 8080 --directory /"
+      sh -c "mkdir -p /app/www && echo '<!DOCTYPE html><html><body>đây là web_service</body></html>' > /app/www/index.html && python -m http.server 8080 --directory /app/www"
     networks:
       - app_net
 
