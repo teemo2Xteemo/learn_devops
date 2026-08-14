@@ -6,6 +6,17 @@ services:
     image: python:3.10-slim
     command: >
       sh -c "mkdir -p /app/www && echo '<!DOCTYPE html><html><body>đây là api_service</body></html>' > /app/www/index.html && python -m http.server 8080 --directory /app/www"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8080')",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 3
     networks:
       - app_net
 
@@ -14,6 +25,17 @@ services:
     image: python:3.10-slim
     command: >
       sh -c "mkdir -p /app/www && echo '<!DOCTYPE html><html><body>đây là web_service</body></html>' > /app/www/index.html && python -m http.server 8080 --directory /app/www"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "python",
+          "-c",
+          "import urllib.request; urllib.request.urlopen('http://localhost:8080')",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 3
     networks:
       - app_net
 
@@ -27,8 +49,10 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - ./nginx/ssl:/etc/nginx/ssl:ro
     depends_on:
-      - api_service
-      - web_service
+      api_service:
+        condition: service_healthy
+      web_service:
+        condition: service_healthy
     networks:
       - app_net
 
