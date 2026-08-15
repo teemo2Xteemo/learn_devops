@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: lab_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: app_password_secure
+      POSTGRES_DB: app_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - backend_net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app_user -d app_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: lab_redis
+    restart: always
+    command: redis-server --save 60 1 --loglevel notice
+    volumes:
+      - redisdata:/data
+    networks:
+      - backend_net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    image: python:3.10-alpine
+    container_name: lab_backend
+    working_dir: /app
+    command: |
+      sh -c "pip install redis psycopg2-binary &&
+             python -c '
+      import redis, psycopg2, os, time
+      print(\"Checking DB & Redis connectivity via Internal DNS...\")
+      r = redis.Redis(host=\"lab_redis\", port=6379)
+      print(\"Redis Ping:\", r.ping())
+      conn = psycopg2.connect(host=\"lab_postgres\", dbname=\"app_db\", user=\"app_user\", password=\"app_password_secure\")
+      print(\"Postgres Status:\", conn.status)
+      print(\"All connectivity checks passed successfully!\")
+      '"
+    networks:
+      - backend_net
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+networks:
+  backend_net:
+    driver: bridge
+    name: custom_backend_net
+
+volumes:
+  pgdata:
+    name: custom_pgdata
+    driver: local
+  redisdata:
+    name: custom_redisdata
+    driver: local

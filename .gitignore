@@ -2,3 +2,5 @@
 .terraform
 terraform.tfstate
 *.backup
+backups
+*.log
