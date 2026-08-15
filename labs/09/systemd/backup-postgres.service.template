@@ -1,0 +1,23 @@
+[Unit]
+Description=PostgreSQL Backup Job
+After=docker.service network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60s
+StartLimitBurst=3
+
+[Service]
+Type=oneshot
+WorkingDirectory={{REPOS_DIR}}
+ExecStart=/usr/bin/env bash {{REPOS_DIR}}/backup-postgres.sh
+User={{USER}}
+Group={{GROUP}}
+Restart=on-failure
+RestartSec=5s
+ProtectSystem=full
+ProtectHome=false
+NoNewPrivileges=true
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
