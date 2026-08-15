@@ -16,6 +16,3 @@ ProtectHome=false
 NoNewPrivileges=true
 StandardOutput=journal
 StandardError=journal
-
-[Install]
-WantedBy=multi-user.target
