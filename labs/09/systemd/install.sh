@@ -17,11 +17,18 @@ sed -e "s|{{REPOS_DIR}}|${REPO_DIR}|g" \
     -e "s|{{GROUP}}|${REAL_GROUP}|g" \
     "${CURRENT_DIR}/healthcheck.service.template" | sudo tee /etc/systemd/system/healthcheck.service > /dev/null
 
+sed -e "s|{{REPOS_DIR}}|${REPO_DIR}|g" \
+    -e "s|{{USER}}|${REAL_USER}|g" \
+    -e "s|{{GROUP}}|${REAL_GROUP}|g" \
+    "${CURRENT_DIR}/log-rotate.service.template" | sudo tee /etc/systemd/system/log-rotate.service > /dev/null
+
 sudo cp "${CURRENT_DIR}/backup-postgres.timer" /etc/systemd/system/backup-postgres.timer
 sudo cp "${CURRENT_DIR}/healthcheck.timer" /etc/systemd/system/healthcheck.timer
+sudo cp "${CURRENT_DIR}/log-rotate.timer" /etc/systemd/system/log-rotate.timer
 
 sudo systemctl daemon-reload
 sudo systemctl enable --now backup-postgres.timer
 sudo systemctl enable --now healthcheck.timer
+sudo systemctl enable --now log-rotate.timer
 
-echo "Done! Backup timer and healthcheck timer are active."
+echo "Done! Backup timer, healthcheck timer, and log rotation timer are active."

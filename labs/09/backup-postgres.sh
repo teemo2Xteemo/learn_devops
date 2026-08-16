@@ -4,8 +4,9 @@ set -u
 set -o pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+LOG_DIR="${LOG_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/logs}"
 BACKUP_DIR="${BACKUP_DIR:-$SCRIPT_DIR/backups}"
-LOG_FILE="${LOG_FILE:-$SCRIPT_DIR/backup-postgres.log}"
+LOG_FILE="${LOG_FILE:-$LOG_DIR/backup-postgres.log}"
 CONTAINER_NAME="${CONTAINER_NAME:-lab_postgres}"
 POSTGRES_USER="${POSTGRES_USER:-app_user}"
 POSTGRES_DB="${POSTGRES_DB:-app_db}"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-for unit in backup-postgres.service backup-postgres.timer healthcheck.service healthcheck.timer; do
+for unit in backup-postgres.service backup-postgres.timer healthcheck.service healthcheck.timer log-rotate.service log-rotate.timer; do
     SERVICE_PATH="/etc/systemd/system/${unit}"
 
     if systemctl is-active --quiet "${unit}" 2>/dev/null; then
@@ -18,6 +18,10 @@ for unit in backup-postgres.service backup-postgres.timer healthcheck.service he
         sudo rm -f "${SERVICE_PATH}"
     fi
 done
+
+if [ -f "/usr/local/bin/log-rotate.sh" ]; then
+    sudo rm -f "/usr/local/bin/log-rotate.sh"
+fi
 
 sudo systemctl daemon-reload
 sudo systemctl reset-failed

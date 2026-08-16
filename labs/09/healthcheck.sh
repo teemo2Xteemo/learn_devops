@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -u
-
-LOG_FILE="${LOG_FILE:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/healthcheck.log}"
-ALERT_FILE="${ALERT_FILE:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/alert.log}"
+LOG_DIR="${LOG_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/logs}"
+LOG_FILE="${LOG_FILE:-$LOG_DIR/healthcheck.log}"
+ALERT_FILE="${ALERT_FILE:-$LOG_DIR/alert.log}"
 POSTGRES_CONTAINER="${POSTGRES_CONTAINER:-lab_postgres}"
 REDIS_CONTAINER="${REDIS_CONTAINER:-lab_redis}"
 

@@ -4,3 +4,5 @@ terraform.tfstate
 *.backup
 backups
 *.log
+*.log.*
+logs
